@@ -2,7 +2,8 @@ package auth
 
 import (
 	"context"
-	"encoding/json"
+	"io"
+	// "encoding/json"
 	"log"
 	"net/http"
 
@@ -15,6 +16,7 @@ type Config struct {
 	ClientSecret string
 	State        string
 	RedirectURI  string
+	Issuer			 string
 }
 
 var oauthConfig oauth2.Config
@@ -22,7 +24,7 @@ var ctx = context.Background()
 var provider *oidc.Provider
 
 func (auth *Config) SetupAuth() {
-	provider, err := oidc.NewProvider(ctx, "https://sso.csh.rit.edu/auth/realms/csh")
+	provider, err := oidc.NewProvider(ctx, auth.Issuer)
 
 	if err != nil {
 		log.Fatal(err)
@@ -62,21 +64,14 @@ func (auth *Config) LoginCallback(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to exchange token: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
+	log.Printf("%s", oauthToken)
+	
+	req, err := http.NewRequest("GET", auth.Issuer+"/protocol/openid-connect/userinfo", nil)
+	oauthToken.SetAuthHeader(req)
 
-	userInfo, err := provider.UserInfo(ctx, oauth2.StaticTokenSource(oauthToken))
-	if err != nil {
-		http.Error(w, "Failed to get userinfo: "+err.Error(), http.StatusInternalServerError)
-		return
-	}
+	res, err := http.DefaultClient.Do(req)
+	jsonRaw, err := io.ReadAll(res.Body)
 
-	resp := struct {
-			OAuth2Token *oauth2.Token
-			UserInfo    *oidc.UserInfo
-		}{oauthToken, userInfo}
-		data, err := json.MarshalIndent(resp, "", "    ")
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		w.Write(data)
+	log.Printf("%s", &jsonRaw)
+	
 }
