@@ -15,19 +15,34 @@
         <div class="navbar-user">
           <img id="profile-pic" />
           <span class="text-light" id="profile-name"></span>
-          <a href="/auth/logout" style="color: #c3c3c3;"><i>(logout)</i></a>
+          <a href="/auth/logout" class="text-muted"><i>(logout)</i></a>
         </div>
       </div>
     </div>
   </nav>
 
   <div class="container main p-5">
-    <h1>HIIII</h1>
-
-    <div class="container">
-      <button class="btn btn-primary" onclick="enterQueue('Clarifier')">Clarifier</button>
-      <button class="btn btn-primary" onclick="enterQueue('NewPoint')">New Point</button>
+    <div class="card">
+      <div class="card-header">
+        <h2>Big long discussion in SWEN-261</h2>
+      </div>
+      <ul class="list-group">
+        <li class="list-group-item"><span class="badge badge-success">Clarifier</span> Arnav Gawas (zxcv)</li>
+        <li class="list-group-item"><span class="badge badge-success">Clarifier</span> Matthew Lefler (skye)</li>
+        <li class="list-group-item"><span class="badge badge-info">New Point</span> Noah Hanford (spaced)</li>
+        <li class="list-group-item"><span class="badge badge-info">New Point</span> Owen Stier (crab)</li>
+        <!-- <li class="list-group-item"><span class="badge badge-info">New Point</span> HIII</li> -->
+        <!-- <li class="list-group-item"><span class="badge badge-info">New Point</span> HIII</li> -->
+        <!-- <li class="list-group-item"><span class="badge badge-info">New Point</span> HIII</li> -->
+      </ul>
+      <div class="card-footer d-flex justify-content-center">
+        <div class="mx-auto">
+          <button class="btn btn-primary mx-3" onclick="enterQueue('Clarifier')">Clarifier</button>
+          <button class="btn btn-primary mx-3" onclick="enterQueue('NewPoint')">New Point</button>
+        </div>
+      </div>
     </div>
+
   </div>
 
   <script src="javascript/index.js"></script>
