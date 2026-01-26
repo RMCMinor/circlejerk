@@ -10,13 +10,13 @@ import (
 )
 
 type QueueEntry struct {
-	Name     string `json: "name"`
-	Username string `json: "username"`
-	Type     string `json: "type"`
+	Name     string `json:"name"`
+	Username string `json:"username"`
+	Type     string `json:"type"`
 }
 
 type QueueRequestData struct {
-	Type string `json: "type"`
+	Type string `json:"type"`
 }
 
 var queue []QueueEntry
