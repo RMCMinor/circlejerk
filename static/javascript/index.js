@@ -23,6 +23,14 @@ function enterQueue(type) {
   })
 }
 
+function joinWebsocket() {
+  const socket = new WebSocket(`ws://${window.location.host}/api/join_ws`);
+
+  socket.addEventListener("message", (event) => {
+    console.log("Message from server: ", event.data);
+  });
+}
+
 function parseJwt(token) {
   if (!token) {
     return;
@@ -43,17 +51,51 @@ async function getUserInfo() {
   return parseJwt(cookie.value).UserInfo;
 }
 
-function setUserInfo(userInfo) {
+function updateUserInfo(userInfo) {
   const username = userInfo.preferred_username;
   const name = userInfo.name;
   document.getElementById("profile-pic").src = `https://profiles.csh.rit.edu/image/${username}`;
   document.getElementById("profile-name").innerText = name;
 }
 
+function getListNodeForQueueEntry(queueEntry) {
+  const type = queueEntry["Type"];
+  const name = ` ${queueEntry["Name"]} (${queueEntry["Username"]})`
+
+  const listElement = document.createElement("li");
+  listElement.classList.add("list-group-item");
+
+  const badgeElement = document.createElement("span");
+  badgeElement.classList.add("badge")
+
+  if (type == "NewPoint") {
+    badgeElement.classList.add("badge-info");
+    badgeElement.appendChild(document.createTextNode("New Point"));
+  } else if (type == "Clarifier") {
+    badgeElement.classList.add("badge-success");
+    badgeElement.appendChild(document.createTextNode("Clarifier"));
+  }
+
+  listElement.appendChild(badgeElement);
+  listElement.appendChild(document.createTextNode(name));
+  return listElement;
+}
+
 async function main() {
-  console.log(await getQueue())
+  joinWebsocket()
+
   userInfo = await getUserInfo()
-  setUserInfo(userInfo)
+  updateUserInfo(userInfo)
+
+  let queue = await getQueue()
+  const listGroupElement = document.querySelector("ul.list-group");
+  while (listGroupElement.children.length != 0) {
+    listGroupElement.removeChild(listGroupElement.firstChild)
+  }
+
+  queue.forEach((queueEntry) => {
+    listGroupElement.appendChild(getListNodeForQueueEntry(queueEntry));
+  })
 }
 
 main()

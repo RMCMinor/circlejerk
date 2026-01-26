@@ -9,6 +9,7 @@ import (
 
 	"github.com/bigspaceships/circlejerk/auth"
 	"github.com/bigspaceships/circlejerk/queue"
+	dq_websocket "github.com/bigspaceships/circlejerk/websocket"
 
 	"github.com/joho/godotenv"
 )
@@ -50,7 +51,9 @@ func main() {
 
 	apiMux.HandleFunc("GET /ping", ping)
 	apiMux.HandleFunc("POST /enter", queue.JoinQueue)
+	apiMux.HandleFunc("POST /leave", queue.LeaveQueue)
 	apiMux.HandleFunc("GET /queue", queue.GetQueue)
+	apiMux.HandleFunc("/join_ws", dq_websocket.WebsocketConnect)
 
 	http.Handle("/api/", http.StripPrefix("/api", cshAuth.Handler(apiMux)))
 
