@@ -39,7 +39,7 @@ func (server *WsServer) AddListener(w http.ResponseWriter, r *http.Request) {
 		ws: c,
 	}
 
-	log.Printf("adding listerer\n")
+	log.Printf("adding web socket listerer\n")
 	server.clients[wsSubscriber] = struct{}{}
 	defer wsServer.RemoveListener(wsSubscriber)
 
@@ -61,7 +61,7 @@ func (server *WsServer) AddListener(w http.ResponseWriter, r *http.Request) {
 }
 
 func (server *WsServer) RemoveListener(ws WebsocketSubscriber) {
-	log.Printf("removing listerer\n")
+	log.Printf("removing web socket listerer\n")
 	delete(server.clients, ws)
 }
 

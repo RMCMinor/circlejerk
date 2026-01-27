@@ -26,7 +26,8 @@ func main() {
 	err := godotenv.Load()
 
 	if err != nil {
-		panic("Error loading .env file")
+		log.Println("No env file detected, make sure all secrets are loaded into the environment")
+		// panic("Error loading .env file")
 	}
 
 	cshAuth := auth.Config{
@@ -36,6 +37,12 @@ func main() {
 		RedirectURI: os.Getenv("HOST")+"/auth/callback",
 		AuthURI: os.Getenv("HOST")+"/auth/login",
 		Issuer: os.Getenv("ISSUER"),
+	}
+
+	port := os.Getenv("PORT")
+
+	if port == "" {
+		port = "8080"
 	}
 
 	queue.SetupQueue()
@@ -59,5 +66,6 @@ func main() {
 
 	http.Handle("/", cshAuth.Handler(fs))
 
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Printf("Dairy Queue started on port %s\n", port)
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
