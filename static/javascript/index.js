@@ -24,7 +24,9 @@ function enterQueue(type) {
 }
 
 function joinWebsocket() {
-  const socket = new WebSocket(`ws://${window.location.host}/api/join_ws`);
+  const isSecure = window.location.isSecure;
+  const protocol = isSecure ? "wss" : "ws";
+  const socket = new WebSocket(`${protocol}://${window.location.host}/api/join_ws`);
 
   socket.addEventListener("message", (event) => {
     const eventData = JSON.parse(event.data);
