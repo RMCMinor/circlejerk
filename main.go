@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strings"
 
 	"github.com/bigspaceships/circlejerk/auth"
 	"github.com/bigspaceships/circlejerk/queue"
