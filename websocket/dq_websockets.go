@@ -2,6 +2,7 @@ package dq_websocket
 
 import (
 	"context"
+	"encoding/json"
 	"log"
 	"net/http"
 
@@ -11,7 +12,7 @@ import (
 
 type WebsocketSubscriber struct {
 	ws   *websocket.Conn
-	msgs chan string
+	msgs chan any
 }
 
 type WsServer struct {
@@ -33,13 +34,8 @@ func (server *WsServer) AddListener(w http.ResponseWriter, r *http.Request) {
 
 	defer c.CloseNow()
 
-	err = wsjson.Write(context.Background(), c, "hi")
-	if err != nil {
-		http.Error(w, "Could not send data: "+err.Error(), http.StatusBadRequest)
-	}
-
 	wsSubscriber := WebsocketSubscriber{
-		msgs: make(chan string, 16),
+		msgs: make(chan any, 16),
 		ws: c,
 	}
 
@@ -73,7 +69,9 @@ func WebsocketConnect(w http.ResponseWriter, r *http.Request) {
 	wsServer.AddListener(w, r)
 }
 
-func SendWSMessage(msg string) {
+func SendWSMessage(msg any) {
+	json, _ := json.Marshal(msg)
+	log.Printf("%s\n", json)
 	for client := range wsServer.clients {
 		client.msgs <- msg
 	}

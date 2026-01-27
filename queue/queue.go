@@ -35,8 +35,7 @@ func LeaveQueue(w http.ResponseWriter, r *http.Request) {
 		return slice.Username == userInfo.Username && slice.Type == requestData.Type
 	})
 
-	
-	queue = slices.Concat(queue[:indexOfEntry], queue[(indexOfEntry + 1):])
+	queue = slices.Concat(queue[:indexOfEntry], queue[(indexOfEntry+1):])
 }
 
 func JoinQueue(w http.ResponseWriter, r *http.Request) {
@@ -55,7 +54,13 @@ func JoinQueue(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 
-	dq_websocket.SendWSMessage("hii")
+	dq_websocket.SendWSMessage(struct {
+		Type        string     `json:"type"`
+		Data QueueEntry `json:"data"`
+	}{
+		Type:        "new-point",
+		Data: newEntry,
+	})
 }
 
 func GetQueue(w http.ResponseWriter, r *http.Request) {

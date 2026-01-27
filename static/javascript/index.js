@@ -27,7 +27,13 @@ function joinWebsocket() {
   const socket = new WebSocket(`ws://${window.location.host}/api/join_ws`);
 
   socket.addEventListener("message", (event) => {
-    console.log("Message from server: ", event.data);
+    const eventData = JSON.parse(event.data);
+
+    switch (eventData.type) {
+      case "new-point":
+        addEntryToQueue(eventData.data)
+        break;
+    }
   });
 }
 
@@ -59,8 +65,8 @@ function updateUserInfo(userInfo) {
 }
 
 function getListNodeForQueueEntry(queueEntry) {
-  const type = queueEntry["Type"];
-  const name = ` ${queueEntry["Name"]} (${queueEntry["Username"]})`
+  const type = queueEntry["type"];
+  const name = ` ${queueEntry["name"]} (${queueEntry["username"]})`
 
   const listElement = document.createElement("li");
   listElement.classList.add("list-group-item");
@@ -79,6 +85,12 @@ function getListNodeForQueueEntry(queueEntry) {
   listElement.appendChild(badgeElement);
   listElement.appendChild(document.createTextNode(name));
   return listElement;
+}
+
+function addEntryToQueue(queueEntry) {
+  const listGroupElement = document.querySelector("ul.list-group");
+
+  listGroupElement.appendChild(getListNodeForQueueEntry(queueEntry));
 }
 
 async function main() {
