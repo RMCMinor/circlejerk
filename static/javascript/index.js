@@ -69,6 +69,7 @@ async function getUserInfo() {
 }
 
 function updateUserInfo(userInfo) {
+  window.userInfo = userInfo;
   const username = userInfo.preferred_username;
   const name = userInfo.name;
   document.getElementById("profile-pic").src = `https://profiles.csh.rit.edu/image/${username}`;
@@ -96,15 +97,17 @@ function getListNodeForQueueEntry(queueEntry) {
     badgeElement.appendChild(document.createTextNode("Clarifier"));
   }
 
-  const completeLink = document.createElement("a");
-  completeLink.href = "#";
-  completeLink.classList.add("ml-auto");
-  completeLink.onclick = () => { leaveQueue(type, id); return false; };
-  completeLink.innerHTML = '<i class="fa-solid fa-check text-success"></i>'
-
   listElement.appendChild(badgeElement);
   listElement.appendChild(document.createTextNode(name));
-  listElement.appendChild(completeLink)
+
+  if (queueEntry["username"] == window.userInfo.preferred_username || window.userInfo.is_eboard) {
+    const completeLink = document.createElement("a");
+    completeLink.href = "#";
+    completeLink.classList.add("ml-auto");
+    completeLink.onclick = () => { leaveQueue(type, id); return false; };
+    completeLink.innerHTML = '<i class="fa-solid fa-check text-success"></i>'
+    listElement.appendChild(completeLink)
+  }
   return listElement;
 }
 

@@ -32,7 +32,7 @@ type AuthClaims struct {
 type UserInfo struct {
 	Name     string `json:"name"`
 	Username string `json:"preferred_username"`
-	IsEboard bool
+	IsEboard bool   `json:"is_eboard"`
 }
 
 var oauthConfig oauth2.Config
