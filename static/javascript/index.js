@@ -15,11 +15,8 @@ async function getQueue() {
 }
 
 function enterQueue(type) {
-  fetch(window.location.origin + "/api/enter", {
+  fetch(window.location.origin + "/api/" + type, {
     method: "POST",
-    body: JSON.stringify({
-      type: type
-    })
   })
 }
 
@@ -32,8 +29,11 @@ function joinWebsocket() {
     const eventData = JSON.parse(event.data);
 
     switch (eventData.type) {
-      case "new-point":
-        addEntryToQueue(eventData.data)
+      case "point":
+        addEntryToQueue("point", eventData.data)
+        break;
+      case "clarifier":
+        addEntryToQueue("clarifier", eventData.data)
         break;
     }
   });
@@ -76,10 +76,10 @@ function getListNodeForQueueEntry(queueEntry) {
   const badgeElement = document.createElement("span");
   badgeElement.classList.add("badge")
 
-  if (type == "NewPoint") {
+  if (type == "point") {
     badgeElement.classList.add("badge-info");
     badgeElement.appendChild(document.createTextNode("New Point"));
-  } else if (type == "Clarifier") {
+  } else if (type == "clarifier") {
     badgeElement.classList.add("badge-success");
     badgeElement.appendChild(document.createTextNode("Clarifier"));
   }
@@ -89,10 +89,17 @@ function getListNodeForQueueEntry(queueEntry) {
   return listElement;
 }
 
-function addEntryToQueue(queueEntry) {
-  const listGroupElement = document.querySelector("ul.list-group");
+function addEntryToQueue(type, queueEntry) {
+  const listElement = document.querySelector("ul.list-group");
 
-  listGroupElement.appendChild(getListNodeForQueueEntry(queueEntry));
+  if (type == "clarifier") {  
+    const divider = document.querySelector("div.clarifier-spacer");
+    listElement.insertBefore(getListNodeForQueueEntry(queueEntry), divider);
+  } else if (type == "point") {
+    listElement.appendChild(getListNodeForQueueEntry(queueEntry));
+  } else {
+    console.error("unknown type: " + type)
+  }
 }
 
 async function main() {
@@ -102,13 +109,13 @@ async function main() {
   updateUserInfo(userInfo)
 
   let queue = await getQueue()
-  const listGroupElement = document.querySelector("ul.list-group");
-  while (listGroupElement.children.length != 0) {
-    listGroupElement.removeChild(listGroupElement.firstChild)
-  }
 
-  queue.forEach((queueEntry) => {
-    listGroupElement.appendChild(getListNodeForQueueEntry(queueEntry));
+  queue.clarifiers.forEach((queueEntry) => {
+    addEntryToQueue('clarifier', queueEntry)
+  })
+
+  queue.points.forEach((queueEntry) => {
+    addEntryToQueue('point', queueEntry)
   })
 }
 

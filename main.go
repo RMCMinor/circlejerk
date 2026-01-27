@@ -58,8 +58,10 @@ func main() {
 	apiMux := http.NewServeMux()
 
 	apiMux.HandleFunc("GET /ping", ping)
-	apiMux.HandleFunc("POST /enter", queue.JoinQueue)
-	apiMux.HandleFunc("POST /leave", queue.LeaveQueue)
+	apiMux.HandleFunc("POST /point", queue.NewPoint)
+	apiMux.HandleFunc("POST /clarifier", queue.NewClarifier)
+	apiMux.HandleFunc("DELETE /point", queue.NewPoint)
+	apiMux.HandleFunc("DELETE /clarifier", queue.NewClarifier)
 	apiMux.HandleFunc("GET /queue", queue.GetQueue)
 	apiMux.HandleFunc("/join_ws", ws_server.WebsocketConnect)
 
