@@ -78,7 +78,7 @@ function getListNodeForQueueEntry(queueEntry) {
 
   if (type == "point") {
     badgeElement.classList.add("badge-info");
-    badgeElement.appendChild(document.createTextNode("New Point"));
+    badgeElement.appendChild(document.createTextNode("Point"));
   } else if (type == "clarifier") {
     badgeElement.classList.add("badge-success");
     badgeElement.appendChild(document.createTextNode("Clarifier"));
