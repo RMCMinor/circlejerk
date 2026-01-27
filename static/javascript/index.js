@@ -26,7 +26,7 @@ function leaveQueue(type, id) {
   });
 }
 
-function joinWebsocket() {
+function joinWebsocket(retryCount = 0) {
   const isSecure = window.location.protocol == "https:";
   const protocol = isSecure ? "wss" : "ws";
   const socket = new WebSocket(`${protocol}://${window.location.host}/api/join_ws`);
@@ -44,6 +44,19 @@ function joinWebsocket() {
       case "delete":
         removeEntryFromQueue(eventData.id, eventData.dismisser);
         break;
+    }
+  });
+
+  socket.addEventListener("open", async () => {
+    if (retryCount != 0) {
+      console.log("reestablished websocket connection");
+      await rebuildQueue();
+    }
+  });
+
+  socket.addEventListener("close", (event) => {
+    if (!event.wasClean) {
+      setTimeout(() => joinWebsocket(retryCount + 1), 500);
     }
   });
 }
