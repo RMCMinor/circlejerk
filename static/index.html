@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html class="h-100">
 
 <head>
   <title>Circlejerk</title>
@@ -15,10 +15,14 @@
 
       font-weight: inherit;
     }
+
+    .mh-0 {
+      min-height: 0px;
+    }
   </style>
 </head>
 
-<body>
+<body class="h-100 d-flex flex-column">
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container">
       <a class="navbar-brand" href="/">Dairy Queen 🍦</a>
@@ -32,8 +36,8 @@
     </div>
   </nav>
 
-  <div class="container main p-5">
-    <div class="card">
+  <div class="container main p-5 d-flex flex-column flex-grow-1 overflow-hidden">
+    <div class="card d-flex flex-column flex-grow-1 overflow-hidden">
       <div class="card-header d-flex flex-row align-items-center">
         <h2 class="m-0">
           <input class="discussion-title" value="AGH" onchange="changeTopic(event)" />
@@ -42,12 +46,14 @@
           <i class="fa-solid fa-arrows-rotate text-muted"></i>
         </a>
       </div>
-      <ul class="list-group">
-        <div class="clarifier-spacer"></div>
-        <!-- <li class="list-group-item"><span class="badge badge-success">Clarifier</span> Arnav Gawas (zxcv)</li> -->
-        <!-- <li class="list-group-item"><span class="badge badge-info">New Point</span> HIII</li> -->
-      </ul>
-      <div class="card-footer d-flex justify-content-center">
+      <div class="flex-grow-1 mh-0 overflow-auto">
+        <ul class="list-group">
+          <div class="clarifier-spacer"></div>
+          <!-- <li class="list-group-item"><span class="badge badge-success">Clarifier</span> Arnav Gawas (zxcv)</li> -->
+          <!-- <li class="list-group-item"><span class="badge badge-info">New Point</span> HIII</li> -->
+        </ul>
+      </div>
+      <div class="card-footer mb-0 d-flex justify-content-center">
         <div class="mx-auto">
           <button class="btn btn-primary mx-3" onclick="enterQueue('clarifier')">Clarifier</button>
           <button class="btn btn-primary mx-3" onclick="enterQueue('point')">New Point</button>
